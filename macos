@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${STOW_FOLDERS:=zsh,git}"
+: "${DOTFILES:=$HOME/.dotfiles}"
+
+script="install"
+case "${1:-}" in
+    "")        ;;
+    --clean)   script="clean-env" ;;
+    --help|-h)
+        echo "Usage: ./macos [--clean | --help]"
+        exit 0
+        ;;
+    *)
+        echo "unknown arg: $1" >&2
+        exit 1
+        ;;
+esac
+
+if [[ "$script" == "install" ]]; then
+    if ! xcode-select -p &>/dev/null; then
+        xcode-select --install
+        echo "Xcode Command Line Tools are installing in a GUI prompt."
+        echo "Re-run ./macos once that completes."
+        exit 1
+    fi
+
+    if [[ ! -x /opt/homebrew/bin/brew && ! -x /usr/local/bin/brew ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    if [[ -x /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x /usr/local/bin/brew ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+
+    if ! command -v stow >/dev/null; then
+        brew install stow
+    fi
+
+    if [[ -f "$DOTFILES/Brewfile" ]]; then
+        brew bundle --file="$DOTFILES/Brewfile"
+    fi
+fi
+
+STOW_FOLDERS="$STOW_FOLDERS" DOTFILES="$DOTFILES" "$DOTFILES/$script"
