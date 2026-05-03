@@ -24,7 +24,6 @@ To remove all symlinks: `./ubuntu --clean` (or `./macos --clean`).
 These don't fit cleanly into the install scripts — run once per machine:
 
 - **`gh auth login`** — authenticate the GitHub CLI (browser flow).
-- **`chsh -s $(which zsh)`**
 - **SSH key for GitHub** — generate and register a key so you can clone/push via SSH:
   ```bash
   ssh-keygen -t ed25519 -C "niziolek.paul@gmail.com"

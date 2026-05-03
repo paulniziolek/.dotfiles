@@ -25,6 +25,11 @@ if [[ "$script" == "install" ]]; then
         sudo apt install -y "${apt_pkgs[@]}"
     fi
 
+    zsh_path="$(command -v zsh)"
+    if [[ "$(getent passwd "$USER" | cut -d: -f7)" != "$zsh_path" ]]; then
+        sudo chsh -s "$zsh_path" "$USER"
+    fi
+
     if [[ ! -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
