@@ -11,7 +11,7 @@ cd ~/.dotfiles
 ./macos         # on macOS
 ```
 
-By default this stows the `zsh/` folder. To stow more, set `STOW_FOLDERS` (comma-separated):
+By default this stows `zsh,git,wezterm`. To override, set `STOW_FOLDERS` (comma-separated):
 
 ```bash
 STOW_FOLDERS=zsh,nvim,tmux ./ubuntu
@@ -34,7 +34,7 @@ These don't fit cleanly into the install scripts — run once per machine:
 ## Layout
 
 - `ubuntu` — Ubuntu bootstrap: apt prereqs + Homebrew install + dispatch to `install`.
-- `macos` — macOS bootstrap: Xcode CLI tools + Homebrew install + dispatch to `install`.
+- `macos` — macOS bootstrap: Xcode CLI tools + Homebrew install + system `defaults` (keyboard, Dock, Finder, screenshots, disable Spotlight ⌘Space) + dispatch to `install`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.
-- `zsh/` — zsh stow package.
+- `zsh/`, `git/`, `wezterm/` — stow packages.
