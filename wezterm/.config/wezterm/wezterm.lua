@@ -15,6 +15,7 @@ config.font_size = 14
 config.color_scheme = color_scheme_for_appearance(wezterm.gui.get_appearance())
 config.hide_tab_bar_if_only_one_tab = true
 config.native_macos_fullscreen_mode = false
+config.use_fancy_tab_bar = false
 
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
