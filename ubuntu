@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${STOW_FOLDERS:=zsh,git}"
+: "${STOW_FOLDERS:=zsh,git,wezterm}"
 : "${DOTFILES:=$HOME/.dotfiles}"
 
 script="install"
