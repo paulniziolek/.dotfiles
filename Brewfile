@@ -8,7 +8,10 @@ brew "gh"
 brew "fzf"
 brew "jq"
 brew "stow"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 
 cask "claude-code"
 cask "wezterm"
-
+cask "font-jetbrains-mono-nerd-font"
+cask "raycast"

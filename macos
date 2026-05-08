@@ -53,6 +53,12 @@ if [[ "$script" == "install" ]]; then
     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
     defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
+    # Disable Spotlight Cmd+Space (id 64) so it can be reused by another app
+    hotkeys_plist="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+    /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled false" "$hotkeys_plist" 2>/dev/null \
+        || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:64:enabled bool false" "$hotkeys_plist"
+    killall cfprefsd 2>/dev/null || true
+
     # Dock
     defaults write com.apple.dock autohide -bool true
     defaults write com.apple.dock autohide-delay -float 0

@@ -1,4 +1,3 @@
-# Homebrew (Linux, macOS Apple Silicon, macOS Intel — first match wins)
 if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 elif [[ -x /opt/homebrew/bin/brew ]]; then
@@ -11,6 +10,9 @@ fi
 if command -v brew >/dev/null; then
     source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
     source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    # syntax-highlighting must be sourced after any plugin that defines ZLE widgets
+    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # Aliases
