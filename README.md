@@ -31,6 +31,31 @@ These don't fit cleanly into the install scripts — run once per machine:
   ```
   Requires `gh auth login` to have run first. Skip entirely if you only clone via HTTPS.
 
+## WezTerm on Windows + WSL
+
+WezTerm runs as a Windows GUI app, so it reads its config from Windows and renders fonts from Windows — but the dotfiles live in WSL. Bridge the two with a symlink:
+
+```powershell
+# 1. From WSL, get the Windows path to the config:
+#    wslpath -w "$(realpath ~/.dotfiles/wezterm/.config/wezterm/wezterm.lua)"
+# 2. From PowerShell (admin, or with Developer Mode on):
+mkdir "$env:USERPROFILE\.config\wezterm" -Force
+New-Item -ItemType SymbolicLink `
+  -Path   "$env:USERPROFILE\.config\wezterm\wezterm.lua" `
+  -Target "\\wsl.localhost\Ubuntu\home\nizio\.dotfiles\wezterm\.config\wezterm\wezterm.lua"
+```
+
+If `New-Item` complains about admin privilege, enable **Settings → System → For developers → Developer Mode** and reopen PowerShell. Windows `sudo` is not the WSL `sudo`.
+
+Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Windows:
+
+- **Default to WSL on Windows only** — guard with `wezterm.target_triple:find("windows")` before setting `config.default_domain = "WSL:Ubuntu"` (run `wsl -l -v` to confirm the distro name).
+- **Install fonts on Windows** — the GUI host renders fonts, so `JetBrainsMono Nerd Font` must be installed on Windows even if WezTerm launches into WSL:
+
+  ```powershell
+  winget install DEVCOM.JetBrainsMonoNerdFont
+  ```
+
 ## Layout
 
 - `ubuntu` — Ubuntu bootstrap: apt prereqs + Homebrew install + dispatch to `install`.
