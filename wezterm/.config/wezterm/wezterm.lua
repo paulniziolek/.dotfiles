@@ -22,5 +22,9 @@ config.window_close_confirmation = "NeverPrompt"
 
 
 
+if wezterm.target_triple:find("windows") then
+  config.default_domain = "WSL:Ubuntu"
+end
+
 return config
 
