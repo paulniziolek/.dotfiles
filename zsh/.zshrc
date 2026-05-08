@@ -16,6 +16,7 @@ if command -v brew >/dev/null; then
 fi
 
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
 
 # Aliases
 alias gs="git status"

@@ -12,6 +12,7 @@ brew "starship"
 brew "stow"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
+brew "zoxide"
 
 cask "claude-code"
 cask "wezterm"
