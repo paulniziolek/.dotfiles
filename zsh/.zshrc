@@ -15,6 +15,8 @@ if command -v brew >/dev/null; then
     source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
+eval "$(starship init zsh)"
+
 # Aliases
 alias gs="git status"
 alias rl="source ~/.zshrc"
