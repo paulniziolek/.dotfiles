@@ -6,3 +6,6 @@ brew "ripgrep"
 brew "tmux"
 brew "gh"
 brew "fzf"
+
+cask "claude-code"
+
