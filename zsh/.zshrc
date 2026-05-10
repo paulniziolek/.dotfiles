@@ -32,3 +32,14 @@ alias lta1="eza -lTag --level=1 --icons"
 alias lta2="eza -lTag --level=2 --icons"
 alias lta3="eza -lTag --level=3 --icons"
 
+# Functions
+zindex() {
+  local root="${1:-.}"
+
+  fd . "$root" \
+    --type d \
+    --hidden \
+    --exclude .git \
+    --exec zoxide add
+}
+
