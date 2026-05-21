@@ -11,7 +11,7 @@ cd ~/.dotfiles
 ./macos         # on macOS
 ```
 
-By default this stows `zsh,git,wezterm`. To override, set `STOW_FOLDERS` (comma-separated):
+By default this stows `zsh,git,wezterm,bin`. To override, set `STOW_FOLDERS` (comma-separated):
 
 ```bash
 STOW_FOLDERS=zsh,nvim,tmux ./ubuntu
@@ -30,6 +30,7 @@ These don't fit cleanly into the install scripts — run once per machine:
   gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"
   ```
   Requires `gh auth login` to have run first. Skip entirely if you only clone via HTTPS.
+- **`rclone config`** — set up a remote named `gdrive` (Google Drive) if you use `gdoc`. Also drop `md2gdoc-template.docx` at `~/bin/md2gdoc-template.docx` — it's the pandoc reference doc for styling.
 
 ## WezTerm on Windows + WSL
 
@@ -62,4 +63,4 @@ Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Wi
 - `macos` — macOS bootstrap: Xcode CLI tools + Homebrew install + system `defaults` (keyboard, Dock, Finder, screenshots, disable Spotlight ⌘Space) + dispatch to `install`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.
-- `zsh/`, `git/`, `wezterm/` — stow packages.
+- `zsh/`, `git/`, `wezterm/`, `bin/` — stow packages. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).

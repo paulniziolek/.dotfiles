@@ -1,0 +1,26 @@
+#!/bin/zsh
+# gdoc: markdown in, Google Docs link out
+# Usage: gdoc file.md
+
+set -e
+
+if [[ -z "$1" ]]; then
+  echo "Usage: gdoc <file.md>"
+  exit 1
+fi
+
+tmp=$(mktemp /tmp/md2gdoc-XXXX.docx)
+name="${${1:t}%.md}.docx"
+
+
+awk '
+NR>1 && /^[[:space:]]*- / && prev !~ /^[[:space:]]*- / && prev != "" {print ""}
+NR>1 && /^\*\*[A-Z]/ && prev != "" && prev !~ /^$/ {print ""}
+{prev=$0; print}
+' "$1" | pandoc -f markdown -o "$tmp" --reference-doc="$HOME/bin/md2gdoc-template.docx"
+
+rclone copyto "$tmp" "gdrive:$name"
+rm "$tmp"
+
+id=$(rclone lsf "gdrive:$name" --format i)
+echo "https://docs.google.com/document/d/${id}/edit"

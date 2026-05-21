@@ -16,6 +16,8 @@ brew "unzip"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 brew "zoxide"
+brew "pandoc"
+brew "rclone"
 
 cask "claude-code"
 cask "wezterm"
