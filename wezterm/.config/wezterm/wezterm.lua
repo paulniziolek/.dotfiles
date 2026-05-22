@@ -22,7 +22,7 @@ config.window_close_confirmation = "NeverPrompt"
 
 local act = wezterm.action
 config.keys = {
-  { key = '|', mods = 'CMD|SHIFT', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  { key = '\\', mods = 'CMD', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
   { key = '-', mods = 'CMD', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
   { key = 'h', mods = 'CMD', action = act.ActivatePaneDirection 'Left' },
   { key = 'j', mods = 'CMD', action = act.ActivatePaneDirection 'Down' },
