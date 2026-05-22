@@ -28,6 +28,7 @@ config.keys = {
   { key = 'j', mods = 'CMD', action = act.ActivatePaneDirection 'Down' },
   { key = 'k', mods = 'CMD', action = act.ActivatePaneDirection 'Up' },
   { key = 'l', mods = 'CMD', action = act.ActivatePaneDirection 'Right' },
+  { key = 'w', mods = 'CMD', action = act.CloseCurrentPane { confirm = false } },
 }
 
 if wezterm.target_triple:find("windows") then
