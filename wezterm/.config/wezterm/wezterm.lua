@@ -20,6 +20,11 @@ config.use_fancy_tab_bar = false
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
 
+config.colors = {
+  split = '#7aa2f7',
+}
+
+
 local act = wezterm.action
 config.keys = {
   { key = '\\', mods = 'CMD', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
