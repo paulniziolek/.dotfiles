@@ -24,6 +24,11 @@ config.colors = {
   split = '#7aa2f7',
 }
 
+config.inactive_pane_hsb = {
+  saturation = 0.7,
+  brightness = 0.575,
+}
+
 
 local act = wezterm.action
 config.keys = {
