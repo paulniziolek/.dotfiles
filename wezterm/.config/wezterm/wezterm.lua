@@ -30,22 +30,25 @@ config.inactive_pane_hsb = {
 }
 
 
+local is_windows = wezterm.target_triple:find("windows") ~= nil
+local mod = is_windows and 'CTRL' or 'CMD'
+
 local act = wezterm.action
 config.keys = {
-  { key = '\\', mods = 'CMD', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-  { key = '-', mods = 'CMD', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
-  { key = 'h', mods = 'CMD', action = act.ActivatePaneDirection 'Left' },
-  { key = 'j', mods = 'CMD', action = act.ActivatePaneDirection 'Down' },
-  { key = 'k', mods = 'CMD', action = act.ActivatePaneDirection 'Up' },
-  { key = 'l', mods = 'CMD', action = act.ActivatePaneDirection 'Right' },
-  { key = 'w', mods = 'CMD', action = act.CloseCurrentPane { confirm = false } },
-  { key = 'h', mods = 'CMD|SHIFT', action = act.AdjustPaneSize { 'Left', 5 } },
-  { key = 'j', mods = 'CMD|SHIFT', action = act.AdjustPaneSize { 'Down', 5 } },
-  { key = 'k', mods = 'CMD|SHIFT', action = act.AdjustPaneSize { 'Up', 5 } },
-  { key = 'l', mods = 'CMD|SHIFT', action = act.AdjustPaneSize { 'Right', 5 } },
+  { key = '\\', mods = mod, action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  { key = '-', mods = mod, action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
+  { key = 'h', mods = mod, action = act.ActivatePaneDirection 'Left' },
+  { key = 'j', mods = mod, action = act.ActivatePaneDirection 'Down' },
+  { key = 'k', mods = mod, action = act.ActivatePaneDirection 'Up' },
+  { key = 'l', mods = mod, action = act.ActivatePaneDirection 'Right' },
+  { key = 'w', mods = mod, action = act.CloseCurrentPane { confirm = false } },
+  { key = 'h', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Left', 5 } },
+  { key = 'j', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Down', 5 } },
+  { key = 'k', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Up', 5 } },
+  { key = 'l', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Right', 5 } },
 }
 
-if wezterm.target_triple:find("windows") then
+if is_windows then
   config.default_domain = "WSL:Ubuntu"
 end
 
