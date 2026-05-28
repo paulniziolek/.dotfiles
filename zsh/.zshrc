@@ -18,7 +18,6 @@ fi
 export PATH="$HOME/bin:$PATH"
 
 eval "$(starship init zsh)"
-eval "$(zoxide init zsh --cmd cd)"
 
 # Aliases
 alias gs="git status"
@@ -44,4 +43,7 @@ zindex() {
     --exclude .git \
     --exec zoxide add
 }
+
+# Edge case for things that need to be last in .zshrc
+eval "$(zoxide init zsh --cmd cd)"
 
