@@ -44,6 +44,11 @@ zindex() {
     --exec zoxide add
 }
 
+cl() {
+  tput cuu "${1:-1}"
+  tput ed
+}
+
 # Edge case for things that need to be last in .zshrc
 eval "$(zoxide init zsh --cmd cd)"
 
