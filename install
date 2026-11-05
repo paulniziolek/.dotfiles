@@ -1,9 +1,10 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-# Keep the cross-tool machine overlay local and ensure imports have a target.
-mkdir -p "$HOME/.config/agents"
-touch "$HOME/.config/agents/machine.md"
+# Keep Stow from folding these application directories into directory-level
+# symlinks. The shared Markdown files should be linked individually, while the
+# optional machine overlay at ~/.config/agents/machine.md remains unmanaged.
+mkdir -p "$HOME/.codex" "$HOME/.claude"
 
 # Install portable Codex defaults below the mutable user configuration layer.
 _codex_system_source="$DOTFILES/codex-system/etc/codex/config.toml"

@@ -72,13 +72,15 @@ system defaults when the same key appears in both files.
 The `codex` Stow package also links the portable global prompt to
 `~/.codex/AGENTS.md`. Machine-specific guidance lives outside Git at
 `~/.config/agents/machine.md`; the global prompt tells agents to load it when
-the client has not already supplied it. The installer creates this local file
-when absent without overwriting existing machine guidance.
+the client has not already supplied it. This overlay is optional: the installer
+does not create or symlink it, and agents simply skip it when it is absent.
 
 The `claude` Stow package links `~/.claude/CLAUDE.md`. That file imports both
-the portable global prompt and the machine overlay, giving Codex and Claude
-Code the same baseline without committing machine-specific paths or shell
-rules.
+the portable global prompt and, when present, the optional machine overlay,
+giving Codex and Claude Code the same baseline without committing
+machine-specific paths or shell rules. The installer creates the `.codex` and
+`.claude` parent directories first so GNU Stow links these Markdown files
+individually.
 
 ## Manual steps after install
 
