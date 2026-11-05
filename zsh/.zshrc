@@ -16,6 +16,8 @@ if command -v brew >/dev/null; then
 fi
 
 export PATH="$HOME/bin:$PATH"
+[[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 eval "$(starship init zsh)"
 
@@ -49,6 +51,14 @@ cl() {
   tput ed
 }
 
-# Edge case for things that need to be last in .zshrc
+# Initialize zoxide after aliases and functions.
 eval "$(zoxide init zsh --cmd cd)"
 
+# Optional private Roblox configuration, installed by the roblox submodule.
+_roblox_zsh="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/roblox.zsh"
+[[ -r "$_roblox_zsh" ]] && source "$_roblox_zsh"
+unset _roblox_zsh
+
+# Optional unsynchronized machine-specific configuration. Load this last so it
+# can override both the public configuration and the private Roblox overlay.
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

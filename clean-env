@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 pushd $DOTFILES
+
+if [[ -f "$DOTFILES/roblox/.git" && ",$STOW_FOLDERS," != *",roblox,"* ]]; then
+    STOW_FOLDERS="$STOW_FOLDERS,roblox"
+fi
+
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
 do
     echo "Removing $folder"

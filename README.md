@@ -28,6 +28,32 @@ STOW_FOLDERS=zsh,nvim,tmux ./ubuntu
 
 To remove all symlinks: `./ubuntu --clean` (or `./macos --clean`).
 
+## Optional private and local Zsh configuration
+
+The public Zsh configuration supports two additive layers, loaded after the
+main `.zshrc`:
+
+1. `~/.config/zsh/roblox.zsh` for private, Git-synchronized Roblox settings.
+2. `~/.zshrc.local` for unsynchronized settings specific to one machine.
+
+The private Roblox configuration lives in the optional `roblox` submodule. On
+an authorized work machine, initialize it and rerun the platform installer:
+
+```bash
+cd ~/.dotfiles
+git submodule update --init roblox
+./ubuntu # or ./macos
+```
+
+When initialized, the installer automatically includes `roblox` as a Stow
+package. The private repository can provide `.config/zsh/roblox.zsh`; when the
+submodule or that file is absent, startup continues normally. Personal machines
+can leave the submodule uninitialized.
+
+For settings that should never be synchronized, create `~/.zshrc.local`. This
+file lives outside the dotfiles repository and is loaded last, so it can add to
+or override both public and Roblox configuration.
+
 ## Manual steps after install
 
 These don't fit cleanly into the install scripts — run once per machine:
