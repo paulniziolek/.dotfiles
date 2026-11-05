@@ -24,7 +24,6 @@ eval "$(starship init zsh)"
 # Aliases
 alias gs="git status"
 alias rl="source ~/.zshrc"
-alias codex="codex --profile dotfiles"
 alias ls="eza --icons"
 alias ll="eza -lg --icons"
 alias lt="eza -lTg --icons"

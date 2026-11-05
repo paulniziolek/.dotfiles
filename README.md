@@ -56,13 +56,14 @@ or override both public and Roblox configuration.
 
 ## Codex configuration
 
-The `codex` Stow package installs a portable profile at
-`~/.codex/dotfiles.config.toml`. The Zsh `codex` alias selects that profile and
-Codex layers it over the machine-local `~/.codex/config.toml`.
+The `codex` Stow package installs the tracked user configuration directly at
+`~/.codex/config.toml`. Codex loads this file automatically, so no shell alias
+or named profile is required.
 
-Keep portable preferences in `codex/.codex/dotfiles.config.toml`. Keep absolute
-paths, trusted projects, machine-specific MCP servers, and UI-generated state
-in the untracked `~/.codex/config.toml` on each machine.
+This single file synchronizes defaults, writable roots, trusted projects, MCP
+servers, and UI settings across machines. Machine- or project-specific
+exceptions can still use a trusted repository's `.codex/config.toml` or CLI
+overrides.
 
 ## Manual steps after install
 
