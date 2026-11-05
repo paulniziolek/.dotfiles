@@ -1,0 +1,15 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Portable Codex defaults shared across machines.
+
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[marketplaces.kernel]
+source_type = "git"
+source = "https://github.com/kernel/skills.git"
+
+[plugins."generate-video@kernel"]
+enabled = true

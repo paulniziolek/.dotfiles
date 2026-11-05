@@ -1,4 +1,14 @@
 #!/usr/bin/env zsh
+set -euo pipefail
+
+_codex_system_source="$DOTFILES/codex-system/etc/codex/config.toml"
+_codex_system_target="/etc/codex/config.toml"
+if [[ -L "$_codex_system_target" && "$(readlink "$_codex_system_target")" == "$_codex_system_source" ]]; then
+    sudo rm -- "$_codex_system_target"
+    sudo rmdir /etc/codex 2>/dev/null || true
+fi
+unset _codex_system_source _codex_system_target
+
 pushd $DOTFILES
 
 if [[ -f "$DOTFILES/roblox/.git" && ",$STOW_FOLDERS," != *",roblox,"* ]]; then

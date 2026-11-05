@@ -56,14 +56,16 @@ or override both public and Roblox configuration.
 
 ## Codex configuration
 
-The `codex` Stow package installs the tracked user configuration directly at
-`~/.codex/config.toml`. Codex loads this file automatically, so no shell alias
-or named profile is required.
+Portable defaults live in `codex-system/etc/codex/config.toml`. The installer
+links that file to `/etc/codex/config.toml`, the Unix system configuration
+layer. This keeps shared model, reasoning, sandbox, marketplace, and plugin
+defaults synchronized through Git. Installing or removing this system symlink
+may prompt for `sudo`.
 
-This single file synchronizes defaults, writable roots, trusted projects, MCP
-servers, and UI settings across machines. Machine- or project-specific
-exceptions can still use a trusted repository's `.codex/config.toml` or CLI
-overrides.
+Mutable machine state stays in the untracked `~/.codex/config.toml`. Codex can
+record trusted projects, writable roots, MCP servers, and UI state there
+without dirtying the dotfiles checkout. User settings override the portable
+system defaults when the same key appears in both files.
 
 ## Shared agent instructions
 
@@ -111,4 +113,4 @@ Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Wi
 - `windows.ps1` — Windows bootstrap: copies Windows-side configs (currently just `wezterm.lua`) into `%USERPROFILE%`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.
-- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/`, `claude/` — stow packages. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).
+- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/`, `claude/` — home-directory Stow packages. `codex-system/` provides portable Codex defaults under `/etc/codex`. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).

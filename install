@@ -1,8 +1,25 @@
 #!/usr/bin/env zsh
+set -euo pipefail
 
 # Keep the cross-tool machine overlay local and ensure imports have a target.
 mkdir -p "$HOME/.config/agents"
 touch "$HOME/.config/agents/machine.md"
+
+# Install portable Codex defaults below the mutable user configuration layer.
+_codex_system_source="$DOTFILES/codex-system/etc/codex/config.toml"
+_codex_system_target="/etc/codex/config.toml"
+if [[ -f "$_codex_system_source" ]]; then
+    if [[ -e "$_codex_system_target" || -L "$_codex_system_target" ]]; then
+        if [[ ! -L "$_codex_system_target" || "$(readlink "$_codex_system_target")" != "$_codex_system_source" ]]; then
+            print -u2 -- "Refusing to replace existing $_codex_system_target"
+            exit 1
+        fi
+    else
+        sudo mkdir -p /etc/codex
+        sudo ln -s "$_codex_system_source" "$_codex_system_target"
+    fi
+fi
+unset _codex_system_source _codex_system_target
 
 pushd $DOTFILES
 
