@@ -20,7 +20,7 @@ cd \\wsl.localhost\Ubuntu\home\<user>\.dotfiles
 
 If PowerShell refuses to run the script, allow scripts for the current user once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
-By default this stows `zsh,git,wezterm,bin,codex`. To override, set `STOW_FOLDERS` (comma-separated):
+By default this stows `zsh,git,wezterm,bin,codex,claude`. To override, set `STOW_FOLDERS` (comma-separated):
 
 ```bash
 STOW_FOLDERS=zsh,nvim,tmux ./ubuntu
@@ -65,6 +65,19 @@ servers, and UI settings across machines. Machine- or project-specific
 exceptions can still use a trusted repository's `.codex/config.toml` or CLI
 overrides.
 
+## Shared agent instructions
+
+The `codex` Stow package also links the portable global prompt to
+`~/.codex/AGENTS.md`. Machine-specific guidance lives outside Git at
+`~/.config/agents/machine.md`; the global prompt tells agents to load it when
+the client has not already supplied it. The installer creates this local file
+when absent without overwriting existing machine guidance.
+
+The `claude` Stow package links `~/.claude/CLAUDE.md`. That file imports both
+the portable global prompt and the machine overlay, giving Codex and Claude
+Code the same baseline without committing machine-specific paths or shell
+rules.
+
 ## Manual steps after install
 
 These don't fit cleanly into the install scripts — run once per machine:
@@ -98,4 +111,4 @@ Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Wi
 - `windows.ps1` — Windows bootstrap: copies Windows-side configs (currently just `wezterm.lua`) into `%USERPROFILE%`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.
-- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/` — stow packages. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).
+- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/`, `claude/` — stow packages. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).

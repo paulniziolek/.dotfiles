@@ -1,4 +1,9 @@
 #!/usr/bin/env zsh
+
+# Keep the cross-tool machine overlay local and ensure imports have a target.
+mkdir -p "$HOME/.config/agents"
+touch "$HOME/.config/agents/machine.md"
+
 pushd $DOTFILES
 
 # The private Roblox package is optional. An initialized submodule has a .git
