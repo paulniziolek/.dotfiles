@@ -20,7 +20,7 @@ cd \\wsl.localhost\Ubuntu\home\<user>\.dotfiles
 
 If PowerShell refuses to run the script, allow scripts for the current user once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
-By default this stows `zsh,git,wezterm,bin`. To override, set `STOW_FOLDERS` (comma-separated):
+By default this stows `zsh,git,wezterm,bin,codex`. To override, set `STOW_FOLDERS` (comma-separated):
 
 ```bash
 STOW_FOLDERS=zsh,nvim,tmux ./ubuntu
@@ -53,6 +53,17 @@ can leave the submodule uninitialized.
 For settings that should never be synchronized, create `~/.zshrc.local`. This
 file lives outside the dotfiles repository and is loaded last, so it can add to
 or override both public and Roblox configuration.
+
+## Codex configuration
+
+The `codex` Stow package installs a portable profile at
+`~/.codex/dotfiles.config.toml`. The Zsh `codex` alias selects that profile and
+keeps `codex` in yolo mode. Codex layers the profile over the machine-local
+`~/.codex/config.toml`.
+
+Keep portable preferences in `codex/.codex/dotfiles.config.toml`. Keep absolute
+paths, trusted projects, machine-specific MCP servers, and UI-generated state
+in the untracked `~/.codex/config.toml` on each machine.
 
 ## Manual steps after install
 
@@ -87,4 +98,4 @@ Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Wi
 - `windows.ps1` — Windows bootstrap: copies Windows-side configs (currently just `wezterm.lua`) into `%USERPROFILE%`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.
-- `zsh/`, `git/`, `wezterm/`, `bin/` — stow packages. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).
+- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/` — stow packages. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).
