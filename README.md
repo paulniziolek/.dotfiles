@@ -58,8 +58,7 @@ or override both public and Roblox configuration.
 
 The `codex` Stow package installs a portable profile at
 `~/.codex/dotfiles.config.toml`. The Zsh `codex` alias selects that profile and
-keeps `codex` in yolo mode. Codex layers the profile over the machine-local
-`~/.codex/config.toml`.
+Codex layers it over the machine-local `~/.codex/config.toml`.
 
 Keep portable preferences in `codex/.codex/dotfiles.config.toml`. Keep absolute
 paths, trusted projects, machine-specific MCP servers, and UI-generated state
