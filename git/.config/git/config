@@ -10,3 +10,7 @@
 
 [pull]
     rebase = true
+
+# Machine-specific extras (e.g. stowed from ~/.dotfiles-roblox); skipped if missing.
+[include]
+    path = roblox
