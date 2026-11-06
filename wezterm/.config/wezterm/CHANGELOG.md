@@ -3,6 +3,15 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## Undated — Mouse in TUIs
+
+- `config.alternate_buffer_wheel_scroll_speed = 0`: the mouse wheel no longer
+  sends arrow keys to alternate-screen apps that don't enable mouse reporting.
+- `config.mouse_bindings`: `mod+click` opens the link under the cursor even when
+  a TUI (e.g. Claude Code) has mouse reporting on.
+
+**To revert:** delete both settings.
+
 ## 2026-10-23 — Agent status on tabs, prompt jumping
 
 - **Agent status:** [wezterm-agent-deck](https://github.com/Eric162/wezterm-agent-deck)

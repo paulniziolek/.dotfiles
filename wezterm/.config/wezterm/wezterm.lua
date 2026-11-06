@@ -19,6 +19,7 @@ config.use_fancy_tab_bar = false
 
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
+config.alternate_buffer_wheel_scroll_speed = 0
 
 config.colors = {
   split = '#7aa2f7',
@@ -399,6 +400,17 @@ config.keys = {
   { key = 'j', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Down', 5 } },
   { key = 'k', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Up', 5 } },
   { key = 'l', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Right', 5 } },
+}
+
+-- mod+click opens a link under the cursor even while a TUI (e.g. Claude Code)
+-- has mouse reporting enabled and would otherwise swallow the click.
+config.mouse_bindings = {
+  {
+    event = { Up = { streak = 1, button = 'Left' } },
+    mods = mod,
+    mouse_reporting = true,
+    action = act.OpenLinkAtMouseCursor,
+  },
 }
 
 if is_windows then
