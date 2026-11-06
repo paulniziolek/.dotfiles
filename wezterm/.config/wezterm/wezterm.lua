@@ -384,23 +384,47 @@ wezterm.on('augment-command-palette', function()
   return entries
 end)
 
+-- While herdr is the pane's foreground program, the tab and pane shortcuts
+-- drive herdr through its ctrl+b prefix instead of WezTerm. The resize chords
+-- are herdr direct bindings set in ~/.config/herdr/config.toml.
+local function in_herdr(pane)
+  return (pane:get_foreground_process_name() or ''):match '/herdr$' ~= nil
+end
+
+local function herdr_or(default_action, herdr_action)
+  return wezterm.action_callback(function(win, pane)
+    win:perform_action(in_herdr(pane) and herdr_action or default_action, pane)
+  end)
+end
+
+local function herdr_prefixed(key)
+  return act.Multiple { act.SendKey { key = 'b', mods = 'CTRL' }, act.SendKey { key = key } }
+end
+
+local herdr_resize = 'CTRL|ALT|SHIFT'
+
 config.keys = {
-  { key = '\\', mods = mod, action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-  { key = '-', mods = mod, action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
-  { key = 'h', mods = mod, action = act.ActivatePaneDirection 'Left' },
-  { key = 'j', mods = mod, action = act.ActivatePaneDirection 'Down' },
-  { key = 'k', mods = mod, action = act.ActivatePaneDirection 'Up' },
-  { key = 'l', mods = mod, action = act.ActivatePaneDirection 'Right' },
-  { key = 'w', mods = mod, action = close_pane_saving_tab },
+  { key = '\\', mods = mod, action = herdr_or(act.SplitHorizontal { domain = 'CurrentPaneDomain' }, herdr_prefixed 'v') },
+  { key = '-', mods = mod, action = herdr_or(act.SplitVertical { domain = 'CurrentPaneDomain' }, herdr_prefixed '-') },
+  { key = 'h', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Left', herdr_prefixed 'h') },
+  { key = 'j', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Down', herdr_prefixed 'j') },
+  { key = 'k', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Up', herdr_prefixed 'k') },
+  { key = 'l', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Right', herdr_prefixed 'l') },
+  { key = 'w', mods = mod, action = herdr_or(close_pane_saving_tab, herdr_prefixed 'x') },
+  { key = 't', mods = mod, action = herdr_or(act.SpawnTab 'CurrentPaneDomain', herdr_prefixed 'c') },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
   { key = 'p', mods = mod .. '|SHIFT', action = my_menu },
   { key = 'UpArrow', mods = mod, action = jump_prompt(-1) },
   { key = 'DownArrow', mods = mod, action = jump_prompt(1) },
-  { key = 'h', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Left', 5 } },
-  { key = 'j', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Down', 5 } },
-  { key = 'k', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Up', 5 } },
-  { key = 'l', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Right', 5 } },
+  { key = 'h', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Left', 5 }, act.SendKey { key = 'LeftArrow', mods = herdr_resize }) },
+  { key = 'j', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Down', 5 }, act.SendKey { key = 'DownArrow', mods = herdr_resize }) },
+  { key = 'k', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Up', 5 }, act.SendKey { key = 'UpArrow', mods = herdr_resize }) },
+  { key = 'l', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Right', 5 }, act.SendKey { key = 'RightArrow', mods = herdr_resize }) },
 }
+
+for i = 1, 9 do
+  table.insert(config.keys, { key = tostring(i), mods = mod, action = herdr_or(act.ActivateTab(i - 1), herdr_prefixed(tostring(i))) })
+end
 
 -- mod+click opens a link under the cursor even while a TUI (e.g. Claude Code)
 -- has mouse reporting enabled and would otherwise swallow the click.

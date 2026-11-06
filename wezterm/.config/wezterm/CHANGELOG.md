@@ -3,6 +3,29 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-11-06 — Cmd shortcuts drive herdr while it is running
+
+`in_herdr`, `herdr_or` and `herdr_prefixed`, just above `config.keys`. When the
+pane's foreground process is `herdr`, the tab and pane shortcuts send herdr's
+Ctrl+B prefix plus its key instead of acting on WezTerm:
+
+| Key | In herdr | Otherwise |
+|---|---|---|
+| `mod+1..9` | `prefix+1..9` switch tab | `ActivateTab` |
+| `mod+t` | `prefix+c` new tab | `SpawnTab` |
+| `mod+w` | `prefix+x` close pane | `close_pane_saving_tab` |
+| `mod+h/j/k/l` | `prefix+h/j/k/l` focus pane | `ActivatePaneDirection` |
+| `mod+shift+h/j/k/l` | Ctrl+Alt+Shift+arrows | `AdjustPaneSize` |
+| `mod+\` / `mod+-` | `prefix+v` / `prefix+minus` split | `SplitHorizontal` / `SplitVertical` |
+
+The resize chords are herdr direct bindings set in `herdr/.config/herdr/config.toml`.
+Not mapped, so they still act on WezTerm's view of the herdr TUI: `mod+Up/Down`
+prompt jumping, `mod+f` search, the `my_commands` split entries.
+
+**To revert:** delete the three helpers, `herdr_resize` and the `for i = 1, 9`
+loop, and unwrap each `herdr_or(default, …)` in `config.keys` back to `default`
+(drop the `mod+t` line).
+
 ## Undated — Mouse in TUIs
 
 - `config.alternate_buffer_wheel_scroll_speed = 0`: the mouse wheel no longer
