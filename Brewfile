@@ -22,6 +22,6 @@ brew "bubblewrap"
 
 cask "codex"
 cask "claude-code"
-cask "wezterm"
+cask "wezterm@nightly"
 cask "font-jetbrains-mono-nerd-font"
 cask "raycast"
