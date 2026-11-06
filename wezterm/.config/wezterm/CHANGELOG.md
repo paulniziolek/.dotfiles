@@ -3,6 +3,30 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-10-23 — Agent status on tabs, prompt jumping
+
+- **Agent status:** [wezterm-agent-deck](https://github.com/Eric162/wezterm-agent-deck)
+  via `agent_deck.apply_to_config(config, { update_interval = 1000 })`, next to
+  `key_hint` in `wezterm.lua`. It registers its own `format-tab-title` and
+  `update-status` handlers and sets `config.status_update_interval`. Tab titles
+  now come from the plugin.
+- **Prompt jumping:** `mod+Up` / `mod+Down` → `jump_prompt(-1/1)`. At a shell
+  prompt it runs `act.ScrollToPrompt`, which needs the shell integration below.
+  While a command is running (last semantic zone is `Output`, e.g. Claude Code)
+  it opens `act.Search { Regex = '^❯ ' }`, which matches Claude Code user
+  messages and starship prompts. `config.key_tables.search_mode` extends the
+  default table with `mod+Up/Down` → Prior/NextMatch.
+- **Shell integration (outside this directory):** `~/.dotfiles/zsh/.zshrc`
+  sources `/Applications/WezTerm.app/Contents/Resources/wezterm.sh` right after
+  `starship init`, guarded on `TERM_PROGRAM == WezTerm`. It adds OSC 133 prompt
+  markers and OSC 7 cwd reporting.
+- **Menu:** `my_commands` gained "Quick select…", "Jump to previous prompt" and
+  "Jump to next prompt".
+
+**To revert:** delete the `agent_deck` lines, `jump_prompt`, `config.key_tables`, the two `mod+Up/Down` keys,
+the three menu entries, and the `wezterm.sh` block in `.zshrc`. Optionally
+delete the plugin clone `…/wezterm/plugins/httpssCssZssZsgithubsDscomsZsEric162sZswezterm-agent-deck`.
+
 ## 2026-10-22 — Session saving, saved tabs, closed-tab history, command menu
 
 Added the [resurrect.wezterm](https://github.com/MLFlexer/resurrect.wezterm)

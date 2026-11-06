@@ -297,6 +297,36 @@ end
 
 local key_hint = is_windows and 'Ctrl' or 'Cmd'
 
+-- Agent status (working / waiting / idle) on each tab, via its own
+-- format-tab-title and update-status handlers. It reads the last 100 lines of
+-- each pane every update_interval ms.
+-- Claude Code prints no prompt markers: while a command is running (the last
+-- semantic zone is Output) jump via scrollback search for lines starting with
+-- '❯ ', which matches both Claude Code's user messages and starship prompts.
+local PROMPT_LINE = '^❯ '
+
+local function jump_prompt(direction)
+  return wezterm.action_callback(function(win, pane)
+    local zones = pane:get_semantic_zones()
+    local last = zones[#zones]
+    if last and last.semantic_type ~= 'Output' then
+      win:perform_action(act.ScrollToPrompt(direction), pane)
+    else
+      win:perform_action(act.Search { Regex = PROMPT_LINE }, pane)
+    end
+  end)
+end
+
+if wezterm.gui then
+  local search_mode = wezterm.gui.default_key_tables().search_mode
+  table.insert(search_mode, { key = 'UpArrow', mods = mod, action = act.CopyMode 'PriorMatch' })
+  table.insert(search_mode, { key = 'DownArrow', mods = mod, action = act.CopyMode 'NextMatch' })
+  config.key_tables = { search_mode = search_mode }
+end
+
+local agent_deck = wezterm.plugin.require 'https://github.com/Eric162/wezterm-agent-deck'
+agent_deck.apply_to_config(config, { update_interval = 1000 })
+
 -- The short menu on mod+shift+p. These also appear in the full palette.
 local my_commands = {
   { label = 'Save this tab as…', action = save_tab_as },
@@ -318,6 +348,9 @@ local my_commands = {
   } },
   { label = 'Save whole session now', action = wezterm.action_callback(function() save_session() end) },
   { label = 'Restore a saved session or window…', action = wezterm.action_callback(restore_from_picker) },
+  { label = 'Quick select: copy a URL, path or hash  (Ctrl+Shift+Space)', action = act.QuickSelect },
+  { label = 'Jump to previous prompt / Claude message  (' .. key_hint .. '+Up)', action = jump_prompt(-1) },
+  { label = 'Jump to next prompt / Claude message  (' .. key_hint .. '+Down)', action = jump_prompt(1) },
   { label = 'Split right  (' .. key_hint .. '+\\)', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
   { label = 'Split down  (' .. key_hint .. '+-)', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
   { label = 'Toggle fullscreen  (Opt+Enter)', action = act.ToggleFullScreen },
@@ -360,6 +393,8 @@ config.keys = {
   { key = 'w', mods = mod, action = close_pane_saving_tab },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
   { key = 'p', mods = mod .. '|SHIFT', action = my_menu },
+  { key = 'UpArrow', mods = mod, action = jump_prompt(-1) },
+  { key = 'DownArrow', mods = mod, action = jump_prompt(1) },
   { key = 'h', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Left', 5 } },
   { key = 'j', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Down', 5 } },
   { key = 'k', mods = mod .. '|SHIFT', action = act.AdjustPaneSize { 'Up', 5 } },

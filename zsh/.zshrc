@@ -21,6 +21,12 @@ export PATH="$HOME/bin:$PATH"
 
 eval "$(starship init zsh)"
 
+# WezTerm shell integration: marks prompts (Cmd+Up/Down jumps between them) and
+# reports the cwd. Sourced after starship so its PS1 markers wrap starship's prompt.
+if [[ "${TERM_PROGRAM-}" == "WezTerm" && -r /Applications/WezTerm.app/Contents/Resources/wezterm.sh ]]; then
+    source /Applications/WezTerm.app/Contents/Resources/wezterm.sh
+fi
+
 # Aliases
 alias gs="git status"
 alias rl="source ~/.zshrc"
