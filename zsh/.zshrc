@@ -19,6 +19,8 @@ export PATH="$HOME/bin:$PATH"
 [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
+export CLAUDE_CODE_NO_FLICKER=1
+
 eval "$(starship init zsh)"
 
 # WezTerm shell integration: marks prompts (Cmd+Up/Down jumps between them) and
@@ -29,6 +31,9 @@ fi
 
 # Aliases
 alias gs="git status"
+alias wl="git worktree list"
+# Open the GitHub PR for the current branch in the browser
+alias ghpr='gh pr view --web'
 alias rl="source ~/.zshrc"
 alias ls="eza --icons"
 alias ll="eza -lg --icons"
@@ -40,6 +45,7 @@ alias lta="eza -lTag --icons"
 alias lta1="eza -lTag --level=1 --icons"
 alias lta2="eza -lTag --level=2 --icons"
 alias lta3="eza -lTag --level=3 --icons"
+alias venv="python3 -m venv .venv && source .venv/bin/activate"
 
 # Functions
 zindex() {
