@@ -16,9 +16,9 @@ _codex_system_source="$DOTFILES/codex-system/etc/codex/config.toml"
 _codex_system_target="/etc/codex/config.toml"
 if [[ -f "$_codex_system_source" ]]; then
     if [[ -e "$_codex_system_target" || -L "$_codex_system_target" ]]; then
+        # Another tool may own it (declawd installs its own system defaults).
         if [[ ! -L "$_codex_system_target" || "$(readlink "$_codex_system_target")" != "$_codex_system_source" ]]; then
-            print -u2 -- "Refusing to replace existing $_codex_system_target"
-            exit 1
+            print -u2 -- "Skipping Codex system defaults: $_codex_system_target already exists"
         fi
     else
         sudo mkdir -p /etc/codex
