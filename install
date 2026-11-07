@@ -1,10 +1,15 @@
 #!/usr/bin/env zsh
+# Usage: ./install [package...]
+# Stows the named packages, else those in $STOW_FOLDERS (comma-separated).
 set -euo pipefail
 
-# Keep Stow from folding these application directories into directory-level
-# symlinks. The shared Markdown files should be linked individually, while the
-# optional machine overlay at ~/.config/agents/machine.md remains unmanaged.
-mkdir -p "$HOME/.codex" "$HOME/.claude"
+: "${DOTFILES:=${0:A:h}}"
+if (( $# )); then
+    STOW_FOLDERS=${(j:,:)@}
+elif [[ -z "${STOW_FOLDERS:-}" ]]; then
+    print -u2 -- "Name packages to stow or set STOW_FOLDERS (e.g. ./install herdr)"
+    exit 1
+fi
 
 # Install portable Codex defaults below the mutable user configuration layer.
 _codex_system_source="$DOTFILES/codex-system/etc/codex/config.toml"
@@ -26,15 +31,16 @@ pushd $DOTFILES
 
 # The private Roblox package is optional. An initialized submodule has a .git
 # file; an uninitialized submodule is intentionally skipped on other machines.
-if [[ -f "$DOTFILES/roblox/.git" && ",$STOW_FOLDERS," != *",roblox,"* ]]; then
+if (( ! $# )) && [[ -f "$DOTFILES/roblox/.git" && ",$STOW_FOLDERS," != *",roblox,"* ]]; then
     STOW_FOLDERS="$STOW_FOLDERS,roblox"
 fi
 
-for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
+for folder in ${(s:,:)STOW_FOLDERS}
 do
     echo "stow $folder"
-    stow -D $folder
-    stow $folder
+    # --no-folding links files rather than whole directories, so apps that
+    # write next to their config (herdr sockets, ~/.codex state) stay out of
+    # the repo and unmanaged files like ~/.config/agents/machine.md can coexist.
+    stow --no-folding -R $folder
 done
 popd
-
