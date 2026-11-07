@@ -44,6 +44,10 @@ main `.zshrc`:
 1. `~/.config/zsh/roblox.zsh` for private, Git-synchronized Roblox settings.
 2. `~/.zshrc.local` for unsynchronized settings specific to one machine.
 
+`.zprofile` does the same for login shells with `~/.config/zsh/roblox.zprofile`
+and `~/.zprofile.local`, and `~/.config/git/config` includes
+`~/.config/git/roblox` when the submodule provides it.
+
 The private Roblox configuration lives in the optional `roblox` submodule. On
 an authorized work machine, initialize it and rerun the platform installer:
 
