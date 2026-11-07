@@ -3,6 +3,23 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-11-06 — Windows fixes for session saving and herdr keys
+
+- The resurrect save folders are created by our own loop (`mkdir -p`, or
+  `cmd /c mkdir` on Windows) and `sessions.save_state_dir` is set directly.
+  The plugin's `change_state_save_dir` replaces each `/` with `\"` in its
+  Windows `mkdir`, so the folders were never created there. The plugin still
+  runs that broken command once for its own default dir when it loads; it fails
+  harmlessly.
+- `tab_save_names` matches file names on `/` or `\`, since `wezterm.read_dir`
+  returns backslash paths on Windows.
+- `mod+t` and `mod+1..9` (herdr-aware) are bound on macOS/Linux only. On Windows
+  `mod` is CTRL, and Ctrl+T is fzf's file picker in the shell.
+
+**To revert:** restore `sessions.change_state_save_dir(save_dir)`, the
+`'([^/]+)%.json$'` pattern, and move the `mod+t` line and `for i = 1, 9` loop
+out of the `if not is_windows` block.
+
 ## 2026-11-06 — Cmd shortcuts drive herdr while it is running
 
 `in_herdr`, `herdr_or` and `herdr_prefixed`, just above `config.keys`. When the

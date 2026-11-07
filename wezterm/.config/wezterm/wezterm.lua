@@ -43,7 +43,15 @@ local resurrect = wezterm.plugin.require 'https://github.com/MLFlexer/resurrect.
 local sessions = resurrect.state_manager
 -- get_file_path concatenates the dir and type with no separator.
 local save_dir = wezterm.home_dir .. '/.local/share/wezterm/resurrect/'
-sessions.change_state_save_dir(save_dir)
+-- change_state_save_dir's mkdir command is malformed on Windows, so create the
+-- folders here and set the directory directly.
+for _, kind in ipairs { 'workspace', 'window', 'tab' } do
+  local dir = save_dir .. kind
+  if not pcall(wezterm.read_dir, dir) then
+    wezterm.run_child_process(is_windows and { 'cmd', '/c', 'mkdir', (dir:gsub('/', '\\')) } or { 'mkdir', '-p', dir })
+  end
+end
+sessions.save_state_dir = save_dir
 
 local CLOSED_PREFIX = 'closed-'
 local SAVED_PREFIX = 'saved-'
@@ -93,7 +101,7 @@ local restore_opts = {
 local function tab_save_names(prefix)
   local names = {}
   for _, path in ipairs(wezterm.read_dir(save_dir .. 'tab')) do
-    local name = path:match '([^/]+)%.json$'
+    local name = path:match '([^/\\]+)%.json$'
     if name and name:sub(1, #prefix) == prefix then
       table.insert(names, name)
     end
@@ -411,7 +419,6 @@ config.keys = {
   { key = 'k', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Up', herdr_prefixed 'k') },
   { key = 'l', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Right', herdr_prefixed 'l') },
   { key = 'w', mods = mod, action = herdr_or(close_pane_saving_tab, herdr_prefixed 'x') },
-  { key = 't', mods = mod, action = herdr_or(act.SpawnTab 'CurrentPaneDomain', herdr_prefixed 'c') },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
   { key = 'p', mods = mod .. '|SHIFT', action = my_menu },
   { key = 'UpArrow', mods = mod, action = jump_prompt(-1) },
@@ -422,8 +429,12 @@ config.keys = {
   { key = 'l', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Right', 5 }, act.SendKey { key = 'RightArrow', mods = herdr_resize }) },
 }
 
-for i = 1, 9 do
-  table.insert(config.keys, { key = tostring(i), mods = mod, action = herdr_or(act.ActivateTab(i - 1), herdr_prefixed(tostring(i))) })
+-- On Windows mod is CTRL, and Ctrl+T / Ctrl+digits belong to the shell (e.g. fzf).
+if not is_windows then
+  table.insert(config.keys, { key = 't', mods = mod, action = herdr_or(act.SpawnTab 'CurrentPaneDomain', herdr_prefixed 'c') })
+  for i = 1, 9 do
+    table.insert(config.keys, { key = tostring(i), mods = mod, action = herdr_or(act.ActivateTab(i - 1), herdr_prefixed(tostring(i))) })
+  end
 end
 
 -- mod+click opens a link under the cursor even while a TUI (e.g. Claude Code)
