@@ -20,7 +20,7 @@ cd \\wsl.localhost\Ubuntu\home\<user>\.dotfiles
 
 If PowerShell refuses to run the script, allow scripts for the current user once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
-By default this stows `zsh,git,wezterm,bin,codex,claude,herdr`. To override, set `STOW_FOLDERS` (comma-separated):
+By default this stows `zsh,git,wezterm,bin,codex,claude,herdr,nvim`. To override, set `STOW_FOLDERS` (comma-separated):
 
 ```bash
 STOW_FOLDERS=zsh,nvim,tmux ./ubuntu
@@ -127,4 +127,4 @@ Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Wi
 - `windows.ps1` — Windows bootstrap: copies Windows-side configs (currently just `wezterm.lua`) into `%USERPROFILE%`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` (or the packages named to `install`) via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.
-- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/`, `claude/`, `herdr/` — home-directory Stow packages. `codex-system/` provides portable Codex defaults under `/etc/codex`. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).
+- `zsh/`, `git/`, `wezterm/`, `bin/`, `codex/`, `claude/`, `herdr/`, `nvim/` — home-directory Stow packages. `nvim/` is a LazyVim config; the roblox submodule adds its game-engine plugin to the same `~/.config/nvim`. `codex-system/` provides portable Codex defaults under `/etc/codex`. `bin/` symlinks executables into `~/bin` (e.g. `gdoc`).
