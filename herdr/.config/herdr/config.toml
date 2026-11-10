@@ -15,3 +15,7 @@ resize_pane_left = "ctrl+shift+alt+left"
 resize_pane_down = "ctrl+shift+alt+down"
 resize_pane_up = "ctrl+shift+alt+up"
 resize_pane_right = "ctrl+shift+alt+right"
+navigate_workspace_up = ["k", "up"]
+navigate_workspace_down = ["j", "down"]
+navigate_pane_up = "ctrl+k"
+navigate_pane_down = "ctrl+j"
