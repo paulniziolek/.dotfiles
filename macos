@@ -86,6 +86,12 @@ EOF
         || /usr/libexec/PlistBuddy -c "Add :AppleSymbolicHotKeys:64:enabled bool false" "$hotkeys_plist"
     killall cfprefsd 2>/dev/null || true
 
+    # Rectangle window snapping (Ctrl+Opt+Left/Up/Right = first/center/last third).
+    # Quit it first so it doesn't write its old settings back over the import.
+    killall Rectangle 2>/dev/null || true
+    defaults import com.knollsoft.Rectangle "$DOTFILES/macos-defaults/com.knollsoft.Rectangle.plist"
+    open -a Rectangle
+
     # Dock
     defaults write com.apple.dock autohide -bool true
     defaults write com.apple.dock autohide-delay -float 0
