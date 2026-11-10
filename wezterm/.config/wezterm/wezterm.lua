@@ -395,8 +395,12 @@ end)
 -- While herdr is the pane's foreground program, the tab and pane shortcuts
 -- drive herdr through its F12 prefix instead of WezTerm. The prefix and the
 -- resize chords are set in ~/.config/herdr/config.toml.
+local function foreground_is(pane, name)
+  return (pane:get_foreground_process_name() or ''):match('/' .. name .. '$') ~= nil
+end
+
 local function in_herdr(pane)
-  return (pane:get_foreground_process_name() or ''):match '/herdr$' ~= nil
+  return foreground_is(pane, 'herdr')
 end
 
 local function herdr_or(default_action, herdr_action)
@@ -423,8 +427,15 @@ config.keys = {
   { key = 'w', mods = mod, action = herdr_or(close_pane_saving_tab, herdr_prefixed 'x') },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
   { key = 'p', mods = mod .. '|SHIFT', action = herdr_or(my_menu, act.Nop) },
-  -- Caps Lock is remapped to F18 (see the macos script): the herdr leader.
-  { key = 'F18', action = herdr_or(act.Nop, herdr_prefix) },
+  -- Caps Lock is remapped to F18 (see the macos script): the herdr leader, and
+  -- Space (the LazyVim leader) when nvim runs outside herdr.
+  { key = 'F18', action = wezterm.action_callback(function(win, pane)
+    if in_herdr(pane) then
+      win:perform_action(herdr_prefix, pane)
+    elseif foreground_is(pane, 'nvim') then
+      win:perform_action(act.SendString ' ', pane)
+    end
+  end) },
   { key = 'UpArrow', mods = mod, action = jump_prompt(-1) },
   { key = 'DownArrow', mods = mod, action = jump_prompt(1) },
   { key = 'h', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Left', 5 }, act.SendKey { key = 'LeftArrow', mods = herdr_resize }) },

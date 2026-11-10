@@ -13,6 +13,8 @@ lists what to remove or restore to revert it.
   to reapply it at every login, so Caps Lock is the herdr leader and does
   nothing elsewhere.
 - `mod+shift+p` → `herdr_or(my_menu, act.Nop)`: the command menu stays out of herdr.
+- Outside herdr, F18 sends a Space when the foreground process is `nvim`, so
+  Caps Lock also works as the LazyVim leader there (`foreground_is` helper).
 
 **To revert:** delete the `F18` key, set `herdr_prefix` back to
 `act.SendKey { key = 'b', mods = 'CTRL' }` and remove `prefix = "f12"` from
