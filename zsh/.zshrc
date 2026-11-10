@@ -29,6 +29,10 @@ if [[ "${TERM_PROGRAM-}" == "WezTerm" && -r /Applications/WezTerm.app/Contents/R
     source /Applications/WezTerm.app/Contents/Resources/wezterm.sh
 fi
 
+# Option+Left/Right move by word (WezTerm sends xterm-style ESC[1;3D / ESC[1;3C)
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
+
 # Aliases
 alias gs="git status"
 alias wl="git worktree list"
