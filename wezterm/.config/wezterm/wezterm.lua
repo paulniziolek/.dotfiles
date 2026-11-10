@@ -452,14 +452,21 @@ if not is_windows then
   end
 end
 
--- mod+click opens a link under the cursor even while a TUI (e.g. Claude Code)
--- has mouse reporting enabled and would otherwise swallow the click.
+-- mod+click opens a link under the cursor and mod+drag moves the window, even
+-- while a TUI (e.g. Claude Code, herdr) has mouse reporting enabled and would
+-- otherwise swallow the click. Without reporting, WezTerm's defaults cover both.
 config.mouse_bindings = {
   {
     event = { Up = { streak = 1, button = 'Left' } },
     mods = mod,
     mouse_reporting = true,
     action = act.OpenLinkAtMouseCursor,
+  },
+  {
+    event = { Drag = { streak = 1, button = 'Left' } },
+    mods = mod,
+    mouse_reporting = true,
+    action = act.StartWindowDrag,
   },
 }
 

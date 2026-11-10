@@ -3,6 +3,16 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-11-10 — mod+drag moves the window inside TUIs
+
+`config.mouse_bindings` gained `mod` + left Drag → `act.StartWindowDrag` with
+`mouse_reporting = true`. WezTerm's default mod+drag only applies when the pane
+isn't reporting mouse events, and herdr, Claude Code and nvim all enable
+reporting, so dragging the title-bar-less (`window_decorations = "RESIZE"`)
+window stopped working there.
+
+**To revert:** delete that `Drag` entry.
+
 ## 2026-11-10 — Caps Lock as the herdr leader, mod+shift+p off in herdr
 
 - herdr's prefix moved from Ctrl+B (Claude Code uses Ctrl+B to background a
