@@ -53,6 +53,33 @@ if [[ "$script" == "install" ]]; then
     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
     defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
+    # Caps Lock -> F18 (no caps, no light); WezTerm uses F18 as the herdr leader.
+    # hidutil mappings reset on reboot, so a LaunchAgent reapplies it at login.
+    capslock_map='{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x70000006D}]}'
+    capslock_agent="$HOME/Library/LaunchAgents/com.pniziolek.capslock-f18.plist"
+    mkdir -p "$(dirname "$capslock_agent")"
+    cat > "$capslock_agent" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.pniziolek.capslock-f18</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--set</string>
+        <string>$capslock_map</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+EOF
+    launchctl bootout "gui/$(id -u)" "$capslock_agent" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "$capslock_agent"
+
     # Disable Spotlight Cmd+Space (id 64) so it can be reused by another app
     hotkeys_plist="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
     /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:64:enabled false" "$hotkeys_plist" 2>/dev/null \

@@ -123,7 +123,7 @@ Two config gotchas, since the same `wezterm.lua` is shared across macOS/Linux/Wi
 ## Layout
 
 - `ubuntu` — Ubuntu bootstrap: apt prereqs + Homebrew install + dispatch to `install`.
-- `macos` — macOS bootstrap: Xcode CLI tools + Homebrew install + system `defaults` (keyboard, Dock, Finder, screenshots, disable Spotlight ⌘Space) + dispatch to `install`.
+- `macos` — macOS bootstrap: Xcode CLI tools + Homebrew install + system `defaults` (keyboard, Caps Lock → F18 as the herdr leader, Dock, Finder, screenshots, disable Spotlight ⌘Space) + dispatch to `install`.
 - `windows.ps1` — Windows bootstrap: copies Windows-side configs (currently just `wezterm.lua`) into `%USERPROFILE%`.
 - `install`, `clean-env` — symlink / unlink each folder in `$STOW_FOLDERS` (or the packages named to `install`) via `stow`.
 - `Brewfile` — cross-platform package list, applied via `brew bundle`.

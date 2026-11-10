@@ -248,14 +248,6 @@ end)
 
 -- Same as sessions.resurrect_on_gui_startup, but with our on_pane_restore.
 wezterm.on('gui-startup', function()
-  -- Caps Lock -> F18 (no caps, no light), the herdr leader bound below.
-  -- hidutil mappings reset on reboot, so reapply whenever WezTerm starts.
-  if wezterm.target_triple:find 'darwin' then
-    wezterm.run_child_process {
-      '/usr/bin/hidutil', 'property', '--set',
-      '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x70000006D}]}',
-    }
-  end
   local f = io.open(save_dir .. 'current_state')
   if not f then
     return
@@ -431,7 +423,7 @@ config.keys = {
   { key = 'w', mods = mod, action = herdr_or(close_pane_saving_tab, herdr_prefixed 'x') },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
   { key = 'p', mods = mod .. '|SHIFT', action = herdr_or(my_menu, act.Nop) },
-  -- Caps Lock is remapped to F18 in gui-startup: the herdr leader.
+  -- Caps Lock is remapped to F18 (see the macos script): the herdr leader.
   { key = 'F18', action = herdr_or(act.Nop, herdr_prefix) },
   { key = 'UpArrow', mods = mod, action = jump_prompt(-1) },
   { key = 'DownArrow', mods = mod, action = jump_prompt(1) },
