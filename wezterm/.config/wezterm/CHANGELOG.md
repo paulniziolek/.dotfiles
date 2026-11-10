@@ -3,6 +3,23 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-11-10 — Caps Lock as the herdr leader, mod+shift+p off in herdr
+
+- herdr's prefix moved from Ctrl+B (Claude Code uses Ctrl+B to background a
+  command) to F12, set in `herdr/.config/herdr/config.toml`. `herdr_prefix`
+  sends F12 and `herdr_prefixed` uses it.
+- `F18` → `herdr_or(act.Nop, herdr_prefix)`. The `gui-startup` handler remaps
+  Caps Lock to F18 with `hidutil` on macOS each time WezTerm starts (the mapping
+  resets on reboot), so Caps Lock is the herdr leader and does nothing
+  elsewhere. Until WezTerm first starts after a reboot, Caps Lock is normal.
+- `mod+shift+p` → `herdr_or(my_menu, act.Nop)`: the command menu stays out of herdr.
+
+**To revert:** delete the `F18` key, set `herdr_prefix` back to
+`act.SendKey { key = 'b', mods = 'CTRL' }` and remove `prefix = "f12"` from
+herdr's config, restore `action = my_menu` on `mod+shift+p`, and delete the
+`hidutil` call in `gui-startup`. To undo the live remap:
+`hidutil property --set '{"UserKeyMapping":[]}'`.
+
 ## 2026-11-06 — Windows fixes for session saving and herdr keys
 
 - The resurrect save folders are created by our own loop (`mkdir -p`, or

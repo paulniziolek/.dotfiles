@@ -10,6 +10,7 @@ enabled = false
 status_indicators = "symbols"
 
 [keys]
+prefix = "f12"
 resize_pane_left = "ctrl+shift+alt+left"
 resize_pane_down = "ctrl+shift+alt+down"
 resize_pane_up = "ctrl+shift+alt+up"

@@ -248,6 +248,14 @@ end)
 
 -- Same as sessions.resurrect_on_gui_startup, but with our on_pane_restore.
 wezterm.on('gui-startup', function()
+  -- Caps Lock -> F18 (no caps, no light), the herdr leader bound below.
+  -- hidutil mappings reset on reboot, so reapply whenever WezTerm starts.
+  if wezterm.target_triple:find 'darwin' then
+    wezterm.run_child_process {
+      '/usr/bin/hidutil', 'property', '--set',
+      '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x70000006D}]}',
+    }
+  end
   local f = io.open(save_dir .. 'current_state')
   if not f then
     return
@@ -393,8 +401,8 @@ wezterm.on('augment-command-palette', function()
 end)
 
 -- While herdr is the pane's foreground program, the tab and pane shortcuts
--- drive herdr through its ctrl+b prefix instead of WezTerm. The resize chords
--- are herdr direct bindings set in ~/.config/herdr/config.toml.
+-- drive herdr through its F12 prefix instead of WezTerm. The prefix and the
+-- resize chords are set in ~/.config/herdr/config.toml.
 local function in_herdr(pane)
   return (pane:get_foreground_process_name() or ''):match '/herdr$' ~= nil
 end
@@ -405,8 +413,10 @@ local function herdr_or(default_action, herdr_action)
   end)
 end
 
+local herdr_prefix = act.SendKey { key = 'F12' }
+
 local function herdr_prefixed(key)
-  return act.Multiple { act.SendKey { key = 'b', mods = 'CTRL' }, act.SendKey { key = key } }
+  return act.Multiple { herdr_prefix, act.SendKey { key = key } }
 end
 
 local herdr_resize = 'CTRL|ALT|SHIFT'
@@ -420,7 +430,9 @@ config.keys = {
   { key = 'l', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Right', herdr_prefixed 'l') },
   { key = 'w', mods = mod, action = herdr_or(close_pane_saving_tab, herdr_prefixed 'x') },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
-  { key = 'p', mods = mod .. '|SHIFT', action = my_menu },
+  { key = 'p', mods = mod .. '|SHIFT', action = herdr_or(my_menu, act.Nop) },
+  -- Caps Lock is remapped to F18 in gui-startup: the herdr leader.
+  { key = 'F18', action = herdr_or(act.Nop, herdr_prefix) },
   { key = 'UpArrow', mods = mod, action = jump_prompt(-1) },
   { key = 'DownArrow', mods = mod, action = jump_prompt(1) },
   { key = 'h', mods = mod .. '|SHIFT', action = herdr_or(act.AdjustPaneSize { 'Left', 5 }, act.SendKey { key = 'LeftArrow', mods = herdr_resize }) },
