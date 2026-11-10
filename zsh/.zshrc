@@ -35,6 +35,7 @@ bindkey '^[[1;3C' forward-word
 
 # Aliases
 alias gs="git status"
+alias gc="git checkout"
 alias wl="git worktree list"
 # Open the GitHub PR for the current branch in the browser
 alias ghpr='gh pr view --web'
