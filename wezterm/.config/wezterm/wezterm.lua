@@ -425,6 +425,8 @@ config.keys = {
   { key = 'k', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Up', herdr_prefixed 'k') },
   { key = 'l', mods = mod, action = herdr_or(act.ActivatePaneDirection 'Right', herdr_prefixed 'l') },
   { key = 'w', mods = mod, action = herdr_or(close_pane_saving_tab, herdr_prefixed 'x') },
+  -- Closes the whole tab, e.g. the one running herdr (its server keeps the panes).
+  { key = 'w', mods = mod .. '|SHIFT', action = act.CloseCurrentTab { confirm = false } },
   { key = 't', mods = mod .. '|SHIFT', action = reopen_closed_tab },
   { key = 'p', mods = mod .. '|SHIFT', action = herdr_or(my_menu, act.Nop) },
   -- Caps Lock is remapped to F18 (see the macos script): the herdr leader, and

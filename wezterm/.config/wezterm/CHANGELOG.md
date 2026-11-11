@@ -3,6 +3,14 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-11-11 — mod+shift+w closes the whole tab
+
+`mod+shift+w` → `act.CloseCurrentTab { confirm = false }`, everywhere. Inside
+herdr `mod+w` closes a herdr pane, so this is the way to close the WezTerm tab
+running herdr; the herdr server keeps its panes and agents (run `herdr` again).
+
+**To revert:** delete the `mod+shift+w` line.
+
 ## 2026-11-10 — mod+c copies zsh's keyboard selection
 
 `mod+c` (macOS/Linux only; on Windows mod is CTRL, which must stay Ctrl+C) copies
