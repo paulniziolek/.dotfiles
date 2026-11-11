@@ -3,6 +3,15 @@
 Changes to `wezterm.lua` and to the WezTerm install, newest first. Each entry
 lists what to remove or restore to revert it.
 
+## 2026-11-10 — mod+c copies zsh's keyboard selection
+
+`mod+c` (macOS/Linux only; on Windows mod is CTRL, which must stay Ctrl+C) copies
+the mouse selection as before. With no mouse selection at a zsh prompt it sends
+Alt+W, which `.zshrc` binds to copy the Shift/Option+Shift+arrow selection to the
+clipboard.
+
+**To revert:** delete the `key = 'c'` entry in the `if not is_windows` block.
+
 ## 2026-11-10 — mod+drag moves the window inside TUIs
 
 `config.mouse_bindings` gained `mod` + left Drag → `act.StartWindowDrag` with

@@ -447,6 +447,15 @@ config.keys = {
 -- On Windows mod is CTRL, and Ctrl+T / Ctrl+digits belong to the shell (e.g. fzf).
 if not is_windows then
   table.insert(config.keys, { key = 't', mods = mod, action = herdr_or(act.SpawnTab 'CurrentPaneDomain', herdr_prefixed 'c') })
+  -- mod+c copies the mouse selection; with none at a zsh prompt it sends Alt+W,
+  -- which copies zsh's Shift+arrow selection (see .zshrc).
+  table.insert(config.keys, { key = 'c', mods = mod, action = wezterm.action_callback(function(win, pane)
+    if win:get_selection_text_for_pane(pane) == '' and foreground_is(pane, 'zsh') then
+      win:perform_action(act.SendKey { key = 'w', mods = 'ALT' }, pane)
+    else
+      win:perform_action(act.CopyTo 'Clipboard', pane)
+    end
+  end) })
   for i = 1, 9 do
     table.insert(config.keys, { key = tostring(i), mods = mod, action = herdr_or(act.ActivateTab(i - 1), herdr_prefixed(tostring(i))) })
   end

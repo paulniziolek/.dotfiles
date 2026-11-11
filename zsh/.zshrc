@@ -29,9 +29,45 @@ if [[ "${TERM_PROGRAM-}" == "WezTerm" && -r /Applications/WezTerm.app/Contents/R
     source /Applications/WezTerm.app/Contents/Resources/wezterm.sh
 fi
 
-# Option+Left/Right move by word (WezTerm sends xterm-style ESC[1;3D / ESC[1;3C)
-bindkey '^[[1;3D' backward-word
-bindkey '^[[1;3C' forward-word
+# Option+Left/Right move by word (WezTerm sends xterm-style ESC[1;3D / ESC[1;3C).
+# Adding Shift selects instead, by word (ESC[1;4D/C) or by character with
+# Shift alone (ESC[1;2D/C). Backspace deletes the selection, and Alt+W copies it
+# (WezTerm's Cmd+C sends Alt+W when nothing is selected with the mouse).
+_select_move() {
+  (( REGION_ACTIVE )) || zle set-mark-command
+  zle ${WIDGET#select-}
+}
+_deselect_move() {
+  REGION_ACTIVE=0
+  zle ${WIDGET#deselect-}
+}
+_backward_delete_selection() {
+  if (( REGION_ACTIVE )); then
+    zle kill-region
+  else
+    zle backward-delete-char
+  fi
+}
+_copy_selection() {
+  zle copy-region-as-kill
+  (( $+commands[pbcopy] )) && print -rn -- "$CUTBUFFER" | pbcopy
+  REGION_ACTIVE=0
+}
+for _widget in backward-word forward-word backward-char forward-char; do
+  zle -N select-$_widget _select_move
+  zle -N deselect-$_widget _deselect_move
+done
+unset _widget
+zle -N backward-delete-selection _backward_delete_selection
+zle -N copy-selection _copy_selection
+bindkey '^?' backward-delete-selection
+bindkey '^[[1;3D' deselect-backward-word
+bindkey '^[[1;3C' deselect-forward-word
+bindkey '^[[1;4D' select-backward-word
+bindkey '^[[1;4C' select-forward-word
+bindkey '^[[1;2D' select-backward-char
+bindkey '^[[1;2C' select-forward-char
+bindkey '^[w' copy-selection
 
 # Aliases
 alias gs="git status"
